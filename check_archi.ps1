@@ -1,9 +1,10 @@
-$path = $args[0]
+[String]$path = $args
 $type = ""
 $content = ((Get-Content $path -Encoding Byte | select -First 10000 | Out-String).Split([Environment]::Newline) | ? {$_})
 for($i = 0; $i-le $content.length-1; $i++){
  if ($content[$i] -eq 80 -And $content[$i + 1] -eq 69 -And $content[$i + 2] -eq 0 -And $content[$i + 3] -eq 0){
   $type = [Convert]::ToString("{0:x}" -f [int]$content[$i + 5]) + [Convert]::ToString("{0:x}" -f [int]$content[$i + 4])
+  break
  }
 }
 $string = "This file is compatible with"
@@ -37,3 +38,4 @@ switch ( $type )
 	169	{ Write-Host $string "MIPS little-endian WCE v2" $archi }
 	default{ Write-Host "Couldn't find the PE of the program." }
 }
+pause
